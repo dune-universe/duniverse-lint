@@ -1,0 +1,4 @@
+(executable
+ (name duniverse_lint)
+ (public_name duniverse-lint)
+ (libraries duniverse_lint))

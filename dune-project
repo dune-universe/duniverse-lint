@@ -14,5 +14,8 @@
  (description "`duniverse-lint` checks ports to `dune` for correctness")
  (depends
   (ocaml (>= 4.13.0))
+  (base (>= v0.14))
+  (sexplib (>= v0.14))
+  (stdio (>= v0.14))
   (opam-file-format (>= 2.1.2))
   (opam-format (>= 2.1.0))))

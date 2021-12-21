@@ -1,2 +1,3 @@
 (library
- (name duniverse_lint))
+ (name duniverse_lint)
+ (libraries stdio sexplib))

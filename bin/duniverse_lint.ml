@@ -1,7 +1,13 @@
 module L = Duniverse_lint
+open L.O
+
+let check () =
+  let* () = L.Lint.check_dune_project "dune-project" in
+  Ok ()
 
 let main () =
-  let _success = L.Lint.check_dune_project "dune-project" in
-  Stdio.print_endline "Hooray"
+  match check () with
+  | Ok () -> ()
+  | Error (`Msg msg) -> Stdio.print_endline msg
 
 let () = main ()

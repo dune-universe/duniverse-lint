@@ -38,3 +38,13 @@ let check_dune_project path =
       let* dune_project = parse_dune_project sexp in
       let* () = check_version dune_project.version in
       Result.return ())
+
+let opam_uses_dune path =
+  let base_name = OpamFilename.Base.of_string path in
+  let path = OpamFilename.of_basename base_name in
+  let filename = OpamFile.make path in
+  let* _opam =
+    OpamFile.OPAM.read_opt filename
+    |> Result.of_option ~error:(`Msg "file missing")
+  in
+  Ok ()

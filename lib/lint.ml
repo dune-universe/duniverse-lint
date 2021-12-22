@@ -39,12 +39,25 @@ let check_dune_project path =
       let* () = check_version dune_project.version in
       Result.return ())
 
+let dune_in_build build =
+  build
+  |> List.fold ~init:false ~f:(fun uses_dune (args, _filter) ->
+         match uses_dune with
+         | true -> true
+         | false -> (
+             match List.hd args with
+             | None -> uses_dune
+             | Some (OpamTypes.CString "dune", _) -> true
+             | Some _ -> false))
+  |> Result.ok_if_true ~error:(`Msg "Not using `dune` in build")
+
 let opam_uses_dune path =
   let base_name = OpamFilename.Base.of_string path in
   let path = OpamFilename.of_basename base_name in
   let filename = OpamFile.make path in
-  let* _opam =
+  let* opam =
     OpamFile.OPAM.read_opt filename
     |> Result.of_option ~error:(`Msg "file missing")
   in
+  let* () = dune_in_build opam.build in
   Ok ()

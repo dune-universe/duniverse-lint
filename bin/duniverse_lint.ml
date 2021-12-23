@@ -7,8 +7,8 @@ let check () =
   Ok ()
 
 let main () =
-  match check () with
-  | Ok () -> ()
-  | Error (`Msg msg) -> Stdio.print_endline msg
+  let open Cmdliner in
+  let duniverse_lint = Term.(const check $ const ()) in
+  Term.exit @@ Term.eval (duniverse_lint, Term.info "duniverse-lint")
 
 let () = main ()

@@ -16,6 +16,7 @@
  (depends
   (ocaml (>= 4.13.0))
   (base (>= v0.14))
+  (cmdliner (>= 1.0.4))
   (sexplib (>= v0.14))
   (stdio (>= v0.14))
   (opam-file-format (>= 2.1.2))

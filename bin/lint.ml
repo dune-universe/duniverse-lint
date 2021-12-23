@@ -1,9 +1,13 @@
+open Base
+
 module L = Duniverse_lint
 open L.O
 
 let check () =
   let* () = L.Lint.check_dune_project "dune-project" in
-  let* () = L.Lint.opam_uses_dune "duniverse-lint.opam" in
+  let entries = L.Entries.opam_files "." in
+  let checks = List.map entries ~f:L.Lint.opam_uses_dune in
+  let* () = Result.all_unit checks in
   Ok ()
 
 let main () =

@@ -1,4 +1,4 @@
 (executable
- (name duniverse_lint)
+ (name lint)
  (public_name duniverse-lint)
  (libraries base cmdliner stdio duniverse_lint))

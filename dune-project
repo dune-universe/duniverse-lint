@@ -7,7 +7,6 @@
 (license ISC)
 (authors "Marek Kubica")
 (maintainers "Marek Kubica <marek@tarides.com>")
-(version 0.0.1+dune)
 
 (package
  (name duniverse-lint)

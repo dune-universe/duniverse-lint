@@ -1,5 +1,4 @@
 open Base
-
 module L = Duniverse_lint
 open L.O
 
@@ -11,8 +10,11 @@ let check () =
   Ok ()
 
 let main () =
-  let open Cmdliner in
-  let duniverse_lint = Term.(const check $ const ()) in
-  Term.exit @@ Term.eval (duniverse_lint, Term.info "duniverse-lint")
+  match check () with
+  | Ok () -> ()
+  | Error (`Msg msg) -> Stdio.print_endline msg
 
-let () = main ()
+let () =
+  let open Cmdliner in
+  let duniverse_lint = Term.(const main $ const ()) in
+  Term.exit @@ Term.eval (duniverse_lint, Term.info "duniverse-lint")

@@ -2,10 +2,11 @@ open Base
 open O
 module Sexp = Sexplib.Sexp
 
+let dune_n = Re.(seq [ str "+dune"; rep digit; eol ]) |> Re.compile
+
 let check_version version =
-  version
-  |> String.is_suffix ~suffix:"+dune"
-  |> Result.ok_if_true ~error:(`Msg "Version is missing +dune")
+  version |> Re.execp dune_n
+  |> Result.ok_if_true ~error:(`Msg "Version is missing +dune suffix")
 
 type dune_project = { name : string; version : string }
 

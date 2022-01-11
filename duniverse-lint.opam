@@ -10,6 +10,7 @@ bug-reports: "https://github.com/dune-universe/duniverse-lint/issues"
 depends: [
   "dune" {>= "2.9"}
   "ocaml" {>= "4.11.0"}
+  "alcotest" {with-test & >= "1.5.0"}
   "base" {>= "v0.14"}
   "cmdliner" {>= "1.0.4"}
   "opam-file-format" {>= "2.1.2"}

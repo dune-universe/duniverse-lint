@@ -3,16 +3,18 @@ module L = Duniverse_lint
 open L.O
 
 let check () =
-  let* () = L.Lint.check_dune_project "dune-project" in
   let entries = L.Entries.opam_files "." in
-  let checks = List.map entries ~f:L.Lint.opam_uses_dune in
-  let* () = Result.all_unit checks in
+  let project = L.Lint.check_dune_project "dune-project" in
+  let opam_files = List.map entries ~f:L.Lint.opam_uses_dune in
+  let all_checks = project :: opam_files in
+  let* () = Result.combine_errors_unit all_checks in
   Ok ()
 
 let main () =
   match check () with
   | Ok () -> ()
-  | Error (`Msg msg) -> Stdio.print_endline msg
+  | Error messages ->
+      List.iter ~f:(function `Msg msg -> Stdio.print_endline msg) messages
 
 let () =
   let open Cmdliner in

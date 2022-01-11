@@ -62,3 +62,8 @@ let opam_uses_dune path =
   in
   let* () = dune_in_build opam.build in
   Ok ()
+
+(* code that is exposed for tests but not part of the API *)
+module Private = struct
+  let check_version = check_version
+end

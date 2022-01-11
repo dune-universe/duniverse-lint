@@ -8,7 +8,7 @@ let equal_msg a b =
 
 let message = Alcotest.testable pp_msg equal_msg
 let result = Alcotest.result Alcotest.unit message
-let verify = Duniverse_lint.Lint.check_version
+let verify = Duniverse_lint.Lint.Private.check_version
 
 let test_dune_suffix () =
   let valid = Ok () in

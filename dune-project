@@ -14,9 +14,11 @@
  (description "`duniverse-lint` checks ports to `dune` for correctness")
  (depends
   (ocaml (>= 4.11.0))
+  (alcotest (and :with-test (>= 1.5.0)))
   (base (>= v0.14))
   (cmdliner (>= 1.0.4))
   (opam-file-format (>= 2.1.2))
   (opam-format (>= 2.1.0))
+  (re (>= 1.10.3))
   (sexplib (>= v0.14))
   (stdio (>= v0.14))))

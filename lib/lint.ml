@@ -33,12 +33,14 @@ let parse_dune_project = function
           Error (`Msg "`name` and `version` missing in `dune-project`"))
 
 let check_dune_project path =
-  Stdio.In_channel.with_file path ~f:(fun chan ->
-      let sexps = Sexplib.Sexp.input_sexps chan in
-      let sexp = Sexplib.Sexp.List sexps in
-      let* dune_project = parse_dune_project sexp in
-      let* () = check_version dune_project.version in
-      Result.return ())
+  try
+    Stdio.In_channel.with_file path ~f:(fun chan ->
+        let sexps = Sexplib.Sexp.input_sexps chan in
+        let sexp = Sexplib.Sexp.List sexps in
+        let* dune_project = parse_dune_project sexp in
+        let* () = check_version dune_project.version in
+        Result.return ())
+  with _ -> Error (`Msg "`dune-project` file missing")
 
 let dune_in_build build =
   build
@@ -62,6 +64,10 @@ let opam_uses_dune path =
   in
   let* () = dune_in_build opam.build in
   Ok ()
+
+let opam_files_exist = function
+  | [] -> Error (`Msg "No opam files found")
+  | _ -> Ok ()
 
 (* code that is exposed for tests but not part of the API *)
 module Private = struct

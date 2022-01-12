@@ -12,6 +12,10 @@ val opam_uses_dune : string -> (unit, [ `Msg of string ]) result
     in the build instructions of the OPAM file. It doesn't check whether dune
     actually will build the artifacts but is just an heuristic. *)
 
+val opam_files_exist : string list -> (unit, [ `Msg of string ]) result
+(** [opam_files_exist xs] checks whether there were any opam files found at all
+    and fails linting if no files were detected. *)
+
 (**/**)
 
 (* Undocumented: internal and only exposed for tests *)

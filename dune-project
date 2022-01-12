@@ -1,6 +1,7 @@
 (lang dune 2.9)
 (name duniverse-lint)
 
+(cram enable)
 (generate_opam_files true)
 
 (source (github dune-universe/duniverse-lint))

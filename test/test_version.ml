@@ -20,21 +20,28 @@ let pp_finished testable ppf = function
 let message = Alcotest.testable pp_msg equal_msg
 let result = Alcotest.result Alcotest.unit message
 let finished = Alcotest.testable (pp_finished result) (equal_finished result)
-let verify = Duniverse_lint.Lint.Private.check_version
 
-let test_dune_suffix () =
-  let valid = `Finished (Ok ()) in
-  let invalid = `Finished (Error (`Msg "_")) in
-  Alcotest.check finished "Regular valid" valid (verify "1.0+dune");
-  Alcotest.check finished "Revised valid" valid (verify "1.0+dune2");
-  Alcotest.check finished "Non-alphanumeric revised" invalid
-    (verify "1.0+duneN");
-  Alcotest.check finished "Missing suffix" invalid (verify "1.0");
-  Alcotest.check finished "Not a suffix" invalid (verify "+dune1.0");
-  Alcotest.check finished "Whitespace suffix" invalid (verify "1.0+dune ");
-  Alcotest.check finished "Multiple suffixes" valid (verify "1.0+mirage+dune");
-  Alcotest.check finished "Multiple identical suffixes" valid
-    (verify "1.0+dune+dune")
+let mk_test_dune_suffix expected name version_string () =
+  Alcotest.check finished name expected
+    (Duniverse_lint.Lint.Private.check_version version_string)
 
-let test_case = Alcotest.test_case
-let tests = ("version", [ test_case "Dune suffix" `Quick test_dune_suffix ])
+let mk_test expected name version_string =
+  Alcotest.test_case name `Quick
+    (mk_test_dune_suffix expected name version_string)
+
+let valid = `Finished (Ok ())
+let invalid = `Finished (Error (`Msg "_"))
+
+let test_cases =
+  [
+    mk_test valid "Regular valid" "1.0+dune";
+    mk_test valid "Revised valid" "1.0+dune2";
+    mk_test valid "Multiple suffixes" "1.0+mirage+dune";
+    mk_test valid "Multiple identical suffixes" "1.0+dune+dune";
+    mk_test invalid "Non-alphanumeric revised" "1.0+duneN";
+    mk_test invalid "Missing suffix" "1.0";
+    mk_test invalid "Not a suffix" "+dune1.0";
+    mk_test invalid "Whitespace suffix" "1.0+dune ";
+  ]
+
+let tests = ("version", test_cases)

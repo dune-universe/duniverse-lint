@@ -7,6 +7,19 @@ type check = {
   label : string;
   f : unit -> [ `Finished of lint | `Recursive of lint * check list ];
 }
+(** A [check] is basically a function that checks a certain aspect plus a label
+    to note what it is checking.
+
+    The function is supposed to return the result of its check which is of type
+    [lint] ([unit] on success and a string message if the test fails with a
+    description why).
+
+    The function as two options: if this is the only check that it can do, it
+    should return [`Finished] of the lint result. But if as part of this check
+    more checks are enabled (e.g. checking for existence of a file enables
+    checking of the syntax of the file) then it can return its own check
+    result, as well as further recursive checks using [`Recursive].
+*)
 
 let lint ~label f = { label; f }
 let dune_n = Re.(seq [ str "+dune"; rep digit; eol ]) |> Re.compile

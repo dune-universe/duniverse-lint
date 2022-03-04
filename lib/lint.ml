@@ -24,6 +24,22 @@ type check = {
 let lint ~label f = { label; f }
 let dune_n = Re.(seq [ str "+dune"; rep digit; eol ]) |> Re.compile
 
+let upstream_version version =
+  Re.replace ~all:false dune_n ~f:(fun _ -> "") version
+
+let check_package_in_opam name version =
+  OpamGlobalState.with_ `Lock_none @@ fun global_state ->
+  OpamRepositoryState.with_ `Lock_none global_state @@ fun repos_state ->
+  let repos_list = OpamGlobalState.repos_list global_state in
+  let name = OpamPackage.Name.of_string name in
+  let version = OpamPackage.Version.of_string (upstream_version version) in
+  let package = OpamPackage.create name version in
+  match OpamRepositoryState.find_package_opt repos_state repos_list package with
+  | Some _ -> `Finished (Ok ())
+  | None ->
+      let msg = Fmt.str "%a is not in repository" Pp.package package in
+      `Finished (Error (`Msg msg))
+
 let check_version version =
   match version |> Re.execp dune_n with
   | true -> `Finished (Ok ())
@@ -45,11 +61,16 @@ let parse_dune_project = function
                 | List _ -> (name, version)))
       in
       match (name, version) with
-      | Some _name, Some version ->
-          let check =
+      | Some name, Some version ->
+          let check_version_correctness =
             lint ~label:"Version is correct" (fun () -> check_version version)
           in
-          `Recursive (Ok (), [ check ])
+          let check_opam_availability =
+            lint ~label:"Base version exists in opam-repository" (fun () ->
+                check_package_in_opam name version)
+          in
+          `Recursive
+            (Ok (), [ check_version_correctness; check_opam_availability ])
       | None, Some _ ->
           `Finished (Error (`Msg "`name` missing in `dune-project`"))
       | Some _, None ->
@@ -115,4 +136,5 @@ let all ~label checks = lint ~label (fun () -> `Recursive (Ok (), checks))
 (* code that is exposed for tests but not part of the API *)
 module Private = struct
   let check_version = check_version
+  let upstream_version = upstream_version
 end

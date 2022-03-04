@@ -16,5 +16,7 @@ let main () = match check () with Ok () -> 0 | Error _ -> 1
 
 let () =
   let open Cmdliner in
-  let duniverse_lint = Term.(const main $ const ()) in
-  Term.exit_status @@ Term.eval (duniverse_lint, Term.info "duniverse-lint")
+  let term = Term.(const main $ const ()) in
+  let info = Cmd.info "duniverse-lint" in
+  let cmd = Cmd.v info term in
+  Stdlib.exit @@ Cmd.eval' cmd

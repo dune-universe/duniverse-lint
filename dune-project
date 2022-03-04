@@ -16,7 +16,7 @@
   (ocaml (>= 4.11.0))
   (alcotest (and :with-test (>= 1.5.0)))
   (base (>= v0.14))
-  (cmdliner (>= 1.0.4))
+  (cmdliner (>= 1.1.0))
   (fmt (>= 0.9.0))
   (opam-file-format (>= 2.1.2))
   (opam-format (>= 2.1.0))

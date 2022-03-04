@@ -25,6 +25,8 @@ val all : label:string -> check list -> check
 module Private : sig
   val check_version :
     string -> [ `Finished of (unit, [ `Msg of string ]) result ]
+
+  val upstream_version : string -> string
 end
 
 (**/**)

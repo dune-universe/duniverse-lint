@@ -20,6 +20,7 @@
   (fmt (>= 0.9.0))
   (opam-file-format (>= 2.1.2))
   (opam-format (>= 2.1.0))
+  (opam-state (>= 2.1.0))
   (re (>= 1.10.3))
   (sexplib (>= v0.14))
   (stdio (>= v0.14))))

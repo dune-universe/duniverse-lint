@@ -22,7 +22,8 @@ type check = {
 *)
 
 let lint ~label f = { label; f }
-let dune_n = Re.(seq [ str "+dune"; rep digit; eol ]) |> Re.compile
+let mirage_n = Re.(seq [ str "+mirage"; rep digit])
+let dune_n = Re.(seq [ str "+dune"; rep digit; opt mirage_n; eol ]) |> Re.compile
 
 let check_version version =
   match version |> Re.execp dune_n with

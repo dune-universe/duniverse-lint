@@ -38,10 +38,13 @@ let test_cases =
     mk_test valid "Revised valid" "1.0+dune2";
     mk_test valid "Multiple suffixes" "1.0+mirage+dune";
     mk_test valid "Multiple identical suffixes" "1.0+dune+dune";
+    mk_test valid "+dune+mirage suffix" "1.0+dune+mirage";
+    mk_test valid "+duneX+mirageY suffix" "1.0+dune1+mirage2";
     mk_test invalid "Non-alphanumeric revised" "1.0+duneN";
     mk_test invalid "Missing suffix" "1.0";
     mk_test invalid "Not a suffix" "+dune1.0";
     mk_test invalid "Whitespace suffix" "1.0+dune ";
+    mk_test invalid "+mirage suffix alone" "1.0+mirage";
   ]
 
 let tests = ("version", test_cases)

@@ -1,13 +1,12 @@
 type check
 
 val dune_project : string -> check
-(** [dune_project s] checks whether the [dune-project] file at [s] is
-    valid and returns with an error if not.
+(** [dune_project s] checks whether the [dune-project] file at [s] is valid and
+    returns with an error if not.
 
     Validity is determined by:
     - Does the version include the [+dune] suffix?
-    - Is the [name] specified?
-    *)
+    - Is the [name] specified? *)
 
 val eval : check -> (unit, [ `Msg of string ]) Result.t list
 

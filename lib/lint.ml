@@ -17,13 +17,14 @@ type check = {
     The function as two options: if this is the only check that it can do, it
     should return [`Finished] of the lint result. But if as part of this check
     more checks are enabled (e.g. checking for existence of a file enables
-    checking of the syntax of the file) then it can return its own check
-    result, as well as further recursive checks using [`Recursive].
-*)
+    checking of the syntax of the file) then it can return its own check result,
+    as well as further recursive checks using [`Recursive]. *)
 
 let lint ~label f = { label; f }
-let mirage_n = Re.(seq [ str "+mirage"; rep digit])
-let dune_n = Re.(seq [ str "+dune"; rep digit; opt mirage_n; eol ]) |> Re.compile
+let mirage_n = Re.(seq [ str "+mirage"; rep digit ])
+
+let dune_n =
+  Re.(seq [ str "+dune"; rep digit; opt mirage_n; eol ]) |> Re.compile
 
 let check_version version =
   match version |> Re.execp dune_n with
@@ -88,13 +89,13 @@ let dune_in_build_check build =
   let r =
     build
     |> List.fold ~init:false ~f:(fun uses_dune (args, _filter) ->
-           match uses_dune with
-           | true -> true
-           | false -> (
-               match List.hd args with
-               | None -> uses_dune
-               | Some (OpamTypes.CString "dune", _) -> true
-               | Some _ -> false))
+        match uses_dune with
+        | true -> true
+        | false -> (
+            match List.hd args with
+            | None -> uses_dune
+            | Some (OpamTypes.CString "dune", _) -> true
+            | Some _ -> false))
   in
   match r with
   | true -> `Finished (Ok ())
